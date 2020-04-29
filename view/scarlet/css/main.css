@@ -1,0 +1,52 @@
+body {
+    margin: 0;
+}
+
+html {
+    min-height: 100%;
+    font-family: "맑은고딕", sans-serif;
+}
+
+header {
+    width: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    height: 20px;
+    background: #ffb6b2;
+    border-bottom: 1px solid #aaa;
+}
+
+section {
+    padding: 20px;
+    border-left: 1px solid #aaa;
+    border-right: 1px solid #aaa;
+}
+
+footer {
+    width: 100%;
+    border-top: 1px solid #aaa;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    border: 1px solid gainsboro;
+    padding: 5px;
+}
+
+.give_margin {
+    margin-left: 10px;
+}
+
+#tool {
+    margin-bottom: 15px;
+}
+
+@media (min-width: 1200px) {
+    section {
+        width: 1000px;
+        margin-left: calc(50% - 500px);
+    }
+}
