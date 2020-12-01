@@ -46,4 +46,3 @@
 
         return $skin_data;
     }
-?>

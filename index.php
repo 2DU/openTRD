@@ -69,9 +69,9 @@
             while($i != 2) {
                 if($_SERVER['X_REAL_IP'] && $i === 0) {
                     $ip = $_SERVER['X_REAL_IP'];
-                } else if($_SERVER['HTTP_X_FORWARDED_FOR']) {
+                } elseif($_SERVER['HTTP_X_FORWARDED_FOR']) {
                     $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-                } else if($_SERVER['REMOTE_ADDR']) {
+                } elseif($_SERVER['REMOTE_ADDR']) {
                     $ip = $_SERVER['REMOTE_ADDR'];
                 } else {
                     $ip = '0.0.0.0';
@@ -90,6 +90,17 @@
         }
 
         return $ip;
+    }
+
+    $lang_file = json_decode(file_get_contents('./lang/ko-KR.json'), TRUE);
+    function get_lang($name) {
+        global $lang_file;
+
+        if($load_file[$name]) {
+            return $load_file[$name];
+        } else {
+            return $name." (M)";
+        }
     }
 
     start_init();
@@ -135,13 +146,13 @@
             }
 
             if(check_admin()) {
-                $tool = [['게시판 추가', '?v=add_b']];
+                $tool = [[get_lang('add_board'), '?v=add_b']];
             } else {
                 $tool = [];
             }
 
-            echo load_render('메인 페이지', $data, $tool);
-        } else if($_GET['v'] === 'add_b') {
+            echo load_render(get_lang('main_page'), $data, $tool);
+        } elseif($_GET['v'] === 'add_b') {
             if(check_admin()) {
                 if($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if($_POST["b_name"] !== '') {
@@ -159,33 +170,33 @@
 
                         echo redirect('?v=main');
                     } else {
-                        echo load_render('오류', '필수 항목을 입력하세요.');
+                        echo load_render(get_lang('error'), get_lang('input_error'));
                     }
                 } else {
                     $data = "
                         <form method=\"post\">
-                            게시판 이름
+                            ".get_lang('name')."
                             <br>
                             <input name=\"b_name\">
                             <br>
                             <br>
-                            타입
+                            ".get_lang('type')."
                             <br>
                             <select name=\"b_type\">
-                                <option value=\"thread\">스레드</option>
+                                <option value=\"thread\">".get_lang('thread')."</option>
                             </select>
                             <br>
                             <br>
-                            <button type=\"submit\">추가</buttom>
+                            <button type=\"submit\">".get_lang('add')."</buttom>
                         </form>
                     ";
 
-                    echo load_render('게시판 추가', $data, [["돌아가기", "?v=main"]]);
+                    echo load_render(get_lang('add_board'), $data, [[get_lang('return'), "?v=main"]]);
                 }
             } else {
-                echo load_render('오류', '권한이 부족합니다.');
+                echo load_render(get_lang('error'), get_lang('acl_error'));
             }
-        } else if($_GET['v'] === 'into_b') {
+        } elseif($_GET['v'] === 'into_b') {
             if($_GET['b_id']) {
                 $data = ''; 
 
@@ -214,12 +225,12 @@
                     $data = $data.'</ul>';
                 }
 
-                echo load_render('게시판', $data, $tool);
+                echo load_render(get_lang('board'), $data, $tool);
             } else {
                 http_response_code(404);
                 echo redirect('?v=main');    
             }
-        } else if($_GET['v'] === 'user') {
+        } elseif($_GET['v'] === 'user') {
             $state = get_id();
             if($_SESSION["id"]) {                
                 $sql = $conn -> prepare('select acl from user where name = ?');
@@ -232,29 +243,29 @@
 
             $data = "
                 <ul>
-                    <li>로그인 상태 : ".$state."</li>
+                    <li>".get_lang('login_state')." : ".$state."</li>
                     <br>
-                    <li><a href=\"?v=register\">회원가입</a></li>
-                    <li><a href=\"?v=login\">로그인</a></li>
-                    <li><a href=\"?v=logout\">로그아웃</a></li>
+                    <li><a href=\"?v=register\">".get_lang('register')."</a></li>
+                    <li><a href=\"?v=login\">".get_lang('login')."</a></li>
+                    <li><a href=\"?v=logout\">".get_lang('logout')."</a></li>
                 </ul>
             ";
 
-            echo load_render('사용자 페이지', $data);
-        } else if($_GET['v'] === 'register') {
+            echo load_render(get_lang('user_page'), $data);
+        } elseif($_GET['v'] === 'register') {
             if($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if($_POST["id"] !== '' && $_POST["pw"] !== '' && $_POST["repeat"] !== '') {
                     if(!preg_match("/^[a-zA-Z0-9ㄱ-힣]+$/", $_POST["id"])) {
-                        echo load_render('오류', '아이디에는 알파벳, 숫자, 한글만 허용됩니다.');
+                        echo load_render(get_lang('error'), get_lang('id_check_error'));
                     } else {
                         if($_POST["pw"] !== $_POST["repeat"]) {
-                            echo load_render('오류', '비밀번호와 비밀번호 재확인이 일치하지 않습니다.');
+                            echo load_render(get_lang('error'), get_lang('pw_check_error'));
                         } else {
                             $sql = $conn -> prepare('select name from user where name = ?');
                             $sql -> execute([$_POST["id"]]);
                             $sql_data = $sql -> fetchAll();
                             if($sql_data) {
-                                echo load_render('오류', '동일한 아이디의 사용자가 있습니다.');
+                                echo load_render(get_lang('error'), get_lang('exist_id_error'));
                             } else {
                                 $sql = $conn -> prepare('select name from user limit 1');
                                 $sql -> execute([]);
@@ -273,35 +284,35 @@
                         }
                     }
                 } else {
-                    echo load_render('오류', '모든 항목을 입력하세요.');
+                    echo load_render(get_lang('error'), get_lang('input_all_error'));
                 }
             } else {
                 $data = "
                     <form method=\"post\">
-                        아이디
+                        ".get_lang('id')."
                         <br>
                         <input name=\"id\">
                         <br>
                         <br>
-                        비밀번호
+                        ".get_lang('pw')."
                         <br>
                         <input type=\"password\" name=\"pw\">
                         <br>
                         <br>
-                        비밀번호 재확인
+                        ".get_lang('pw_check')."
                         <br>
                         <input type=\"password\" name=\"repeat\">
                         <br>
                         <br>
-                        <button type=\"submit\">가입</buttom>
+                        <button type=\"submit\">".get_lang('send')."</buttom>
                     </form>
                 ";
 
-                echo load_render('회원가입', $data, [["돌아가기", "?v=user"]]);
+                echo load_render(get_lang('register'), $data, [[get_lang('return'), "?v=user"]]);
             }    
-        } else if($_GET["v"] === 'login') {
+        } elseif($_GET["v"] === 'login') {
             if($_SESSION["id"]) {
-                echo load_render('오류', '이미 로그인 되어 있습니다.');
+                echo redirect('?v=user');
             } else {
                 if($_SERVER['REQUEST_METHOD'] === 'POST') {
                     if($_POST["id"] !== '' && $_POST["pw"] !== '') {
@@ -314,35 +325,35 @@
 
                                 echo redirect('?v=user');
                             } else {
-                                echo load_render('오류', '비밀번호가 다릅니다.');    
+                                echo load_render(get_lang('error'), get_lang('pw_error'));    
                             }
                         } else {
-                            echo load_render('오류', '계정이 없습니다.');    
+                            echo load_render(get_lang('error'), get_lang('no_exist_id_error'));  
                         }
                     } else {
-                        echo load_render('오류', '모든 항목을 입력하세요.');
+                        echo load_render(get_lang('error'), get_lang('input_all_error'));
                     }
                 } else {
                     $data = "
                         <form method=\"post\">
-                            아이디
+                            ".get_lang('id')."
                             <br>
                             <input name=\"id\">
                             <br>
                             <br>
-                            비밀번호
+                            ".get_lang('pw')."
                             <br>
                             <input type=\"password\" name=\"pw\">
                             <br>
                             <br>
-                            <button type=\"submit\">로그인</buttom>
+                            <button type=\"submit\">".get_lang('send')."</buttom>
                         </form>
                     ";
 
-                    echo load_render('로그인', $data, [["돌아가기", "?v=user"]]);
+                    echo load_render(get_lang('login'), $data, [[get_lang('return'), "?v=user"]]);
                 }
             }
-        } else if($_GET["v"] === 'logout') {
+        } elseif($_GET["v"] === 'logout') {
             if($_SESSION["id"]) {
                 $_SESSION["id"] = NULL;
 
@@ -358,4 +369,3 @@
         http_response_code(404);
         echo redirect('?v=main');
     }
-?>
