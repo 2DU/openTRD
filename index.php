@@ -96,8 +96,8 @@
     function get_lang($name) {
         global $lang_file;
 
-        if($load_file[$name]) {
-            return $load_file[$name];
+        if($lang_file[$name]) {
+            return $lang_file[$name];
         } else {
             return $name." (M)";
         }
