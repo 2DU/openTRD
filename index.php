@@ -1,8 +1,4 @@
 <?php
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL & ~E_NOTICE);
-
     require_once('./view/scarlet/index.php');
     $ver = 2;
 
@@ -37,14 +33,14 @@
     }
 
     function redirect($data) {
-        return "<script>window.location.href = '".$data."';</script>";
+        header('Location: '.$data);
     }
 
     function check_admin($id = NULL) {
         global $conn;
 
         if($id === NULL) {
-            $id = $_SESSION["id"];
+            $id = array_key_exists('id', $_SESSION) ? $_SESSION["id"] : NULL;
         }
 
         if($id) {
@@ -122,7 +118,7 @@
         }
     }
 
-    if($_GET['v']) {
+    if(array_key_exists('v', $_GET)) {
         if($_GET['v'] === 'main') {
             $data = ''; 
 
@@ -131,7 +127,7 @@
             $sql_data = $sql -> fetchAll();
             
             $i = 0;
-            while($sql_data[$i]) {
+            while(array_key_exists($i, $sql_data)) {
                 if($data === '') {
                     $data = '<ul>';
                 }

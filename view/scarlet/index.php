@@ -1,12 +1,8 @@
 <?php
-    ini_set('display_errors', 1);
-    ini_set('display_startup_errors', 1);
-    error_reporting(E_ALL & ~E_NOTICE);
-
     function load_render($title, $data, $menu = []) {
         $i = 0;
         $menu_data = "";
-        while($menu[$i]) {
+        while(array_key_exists($i, $menu)) {
             if($i !== 0) {
                 $menu_data = $menu_data." | ";
             }
