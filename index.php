@@ -1,4 +1,7 @@
 <?php
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+
     require_once('./view/scarlet/index.php');
     $ver = 2;
 
@@ -58,16 +61,16 @@
     }
 
     function get_id() {
-        if($_SESSION["id"]) {
+        if(array_key_exists('id', $_SESSION)) {
             $ip = $_SESSION["id"];
         } else {
             $i = 0;
             while($i != 2) {
-                if($_SERVER['X_REAL_IP'] && $i === 0) {
+                if(array_key_exists('X_REAL_IP', $_SERVER) && $i === 0) {
                     $ip = $_SERVER['X_REAL_IP'];
-                } elseif($_SERVER['HTTP_X_FORWARDED_FOR']) {
+                } elseif(array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
                     $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-                } elseif($_SERVER['REMOTE_ADDR']) {
+                } elseif(array_key_exists('REMOTE_ADDR', $_SERVER)) {
                     $ip = $_SERVER['REMOTE_ADDR'];
                 } else {
                     $ip = '0.0.0.0';
@@ -76,6 +79,8 @@
                 if(is_array($ip)) {
                     $ip = $ip[0];
                 }
+				
+				$ip = explode(',', $ip)[0];
 
                 if($ip !== '::1' && $ip !== '127.0.0.1') {
                     break;
@@ -193,7 +198,7 @@
                 echo load_render(get_lang('error'), get_lang('acl_error'));
             }
         } elseif($_GET['v'] === 'into_b') {
-            if($_GET['b_id']) {
+            if(array_key_exists('b_id', $_GET)) {
                 $data = ''; 
 
                 $sql = $conn -> prepare('select name, num, id, date from b_data where list = ?');
@@ -201,7 +206,7 @@
                 $sql_data = $sql -> fetchAll();
                 
                 $i = 0;
-                while($sql_data[$i]) {
+                while(array_key_exists($i, $sql_data)) {
                     if($data === '') {
                         $data = '<ul>';
                     }
@@ -221,14 +226,14 @@
                     $data = $data.'</ul>';
                 }
 
-                echo load_render(get_lang('board'), $data, $tool);
+                echo load_render(get_lang('board'), $data, []);
             } else {
                 http_response_code(404);
                 echo redirect('?v=main');    
             }
         } elseif($_GET['v'] === 'user') {
             $state = get_id();
-            if($_SESSION["id"]) {                
+            if(array_key_exists('id', $_SESSION)) {                
                 $sql = $conn -> prepare('select acl from user where name = ?');
                 $sql -> execute([$state]);
                 $sql_data = $sql -> fetchAll();
@@ -307,7 +312,7 @@
                 echo load_render(get_lang('register'), $data, [[get_lang('return'), "?v=user"]]);
             }    
         } elseif($_GET["v"] === 'login') {
-            if($_SESSION["id"]) {
+            if(array_key_exists('id', $_SESSION)) {
                 echo redirect('?v=user');
             } else {
                 if($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -350,9 +355,9 @@
                 }
             }
         } elseif($_GET["v"] === 'logout') {
-            if($_SESSION["id"]) {
-                $_SESSION["id"] = NULL;
-
+            if(array_key_exists('id', $_SESSION)) {
+                unset($_SESSION["id"]);
+				
                 echo redirect('?v=user');
             } else {
                 echo redirect('?v=login');
