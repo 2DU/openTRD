@@ -1,23 +1,42 @@
 <?php
 	function route_board_main($db) {
-		if(!array_key_exists('b_id', $_GET)) {
+		$b_name = do_check_b_id_exist(1);
+		if($b_name === 0) {
 			do_redirect('?v=main');
 		} else {
+			$data = '';
+
 			$sql_do = $db -> prepare(
-				'select set_data from b_set '.
-				'where set_name = "list" and b_id = ?'
+				'select id, data from b_data '.
+				'where b_id = ? and data_name = "title" '.
+				'order by id + 0 desc'
 			);
 			$sql_do -> bindParam(1, $_GET['b_id']);
 			$sql_do = $sql_do -> execute();
-			$sql_end = $sql_do -> fetchArray();
-			if($sql_end) {
-				echo get_render(
-					$sql_end[0],
-					''
-				);
-			} else {
-				do_redirect('?v=main');
+			while($sql_end = $sql_do -> fetchArray()) {
+				$data = $data.''.
+					'<li>'.
+						'<a href="?v=p_read&b_id='.$_GET['b_id'].'&p_id='.$sql_end[0].'">'.
+							$sql_end[0].'. '.$sql_end[1].
+						'</a>'.
+					'</li>'.
+				'';
 			}
+
+			if($data !== '') {
+				$data = '<ul>'.$data.'</ul>';
+			}
+
+			$tool = [];
+			if(do_check_acl() === 1) {
+				$tool = [[get_lang('add_post'), '?v=p_add&b_id='.$_GET['b_id']]];
+			}
+
+			echo get_render(
+				$b_name,
+				$data,
+				$tool
+			);
 		}
 	}
 ?>

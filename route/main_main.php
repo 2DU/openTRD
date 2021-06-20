@@ -9,18 +9,20 @@
 		while($sql_end = $sql_do -> fetchArray()) {
 			$data = $data.''.
 				'<li>'.
-					'<a href="?v=b_main&b_id='.$sql_end[0].'">'.$sql_end[0].'. '.$sql_end[1].'</a></a>'.
+					'<a href="?v=b_main&b_id='.$sql_end[0].'">'.
+						$sql_end[0].'. '.$sql_end[1].
+					'</a>'.
 				'</li>'.
 			'';
+		}
+		
+		if($data !== '') {
+			$data = '<ul>'.$data.'</ul>';
 		}
 		
 		$tool = [];
 		if(do_check_admin() === 1) {
 			 $tool = [[get_lang('add_board'), '?v=b_add']];
-		}
-		
-		if($data !== '') {
-			$data = '<ul>'.$data.'</ul>';
 		}
 		
 		return get_render(

@@ -74,20 +74,17 @@
 			$data = "
 				<form method=\"post\">
 					".get_lang('id')."
-					<br>
+					<hr class=\"main_hr\"> 
 					<input name=\"id\">
-					<br>
-					<br>
+					<hr class=\"main_hr\"> 
 					".get_lang('pw')."
-					<br>
+					<hr class=\"main_hr\"> 
 					<input type=\"password\" name=\"pw\">
-					<br>
-					<br>
+					<hr class=\"main_hr\"> 
 					".get_lang('pw_check')."
-					<br>
+					<hr class=\"main_hr\"> 
 					<input type=\"password\" name=\"repeat\">
-					<br>
-					<br>
+					<hr class=\"main_hr\"> 
 					<button type=\"submit\">".get_lang('send')."</buttom>
 				</form>
 			";

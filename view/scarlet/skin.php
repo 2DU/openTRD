@@ -1,5 +1,5 @@
 <?php
-    function get_render($title, $data, $menu = []) {
+    function skin_render($title, $data, $menu, $other) {
         $menu_data = "";
         for($i = 0; array_key_exists($i, $menu); $i++) {
             if($i !== 0) {
@@ -15,7 +15,8 @@
                 <head>    
                     <meta charset=\"utf-8\">
                     <title>".$title."</title>
-                    <link rel=\"stylesheet\" href=\"".do_file_fix("/view/scarlet/css/main.css?ver=2")."\">
+					".$other['main_head']."
+                    <link rel=\"stylesheet\" href=\"".do_file_fix('/view/scarlet/css/main.css?ver=2')."\">
                     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
                 </head>
                 <body>
