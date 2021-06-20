@@ -1,15 +1,12 @@
 <?php
-    function load_render($title, $data, $menu = []) {
-        $i = 0;
+    function get_render($title, $data, $menu = []) {
         $menu_data = "";
-        while(array_key_exists($i, $menu)) {
+        for($i = 0; array_key_exists($i, $menu); $i++) {
             if($i !== 0) {
                 $menu_data = $menu_data." | ";
             }
 
             $menu_data = $menu_data."<a href=\"".$menu[$i][1]."\">".$menu[$i][0]."</a>";
-            
-            $i += 1;
         }
 
         $skin_data = "
@@ -18,13 +15,14 @@
                 <head>    
                     <meta charset=\"utf-8\">
                     <title>".$title."</title>
-                    <link rel=\"stylesheet\" href=\"".file_fix("/view/scarlet/css/main.css?ver=2")."\">
+                    <link rel=\"stylesheet\" href=\"".do_file_fix("/view/scarlet/css/main.css?ver=2")."\">
                     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
                 </head>
                 <body>
                     <header>
                         <span class=\"give_margin\"></span>
-                        <a href=\"?v=main\">메인</a> | <a href=\"?v=user\">사용자</a>
+                        <a href=\"?v=main\">".get_lang('main')."</a> | 
+						<a href=\"?v=u_main\">".get_lang('user')."</a>
                     </header>
                     <section>
                         <div id=\"title\"><h1>".$title."</h1></div>
