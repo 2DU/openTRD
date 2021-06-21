@@ -56,7 +56,7 @@
         );
 		
 		// b_set = ['b_id', 'set_name', 'set_data']
-		// b_data = ['b_id', 'id', 'data_name', 'data']
+		// b_data = ['b_id', 'id', 'to_id', 'data_name', 'data']
 		// m_user_set = ['user_name', 'set_name', 'set_data']
 		// m_set = ['set_name', 'set_data', 'set_cover']
 		

@@ -37,8 +37,8 @@
 					$last_id = (string)($last_id + 1);
 
 					$sql_do = $db -> prepare(
-						'insert into b_data (b_id, id, data_name, data) '.
-						'values (?, ?, "title", ?)'
+						'insert into b_data (b_id, id, to_id, data_name, data) '.
+						'values (?, ?, "1", "title", ?)'
 					);
 					$sql_do -> bindParam(1, $_GET['b_id']);
 					$sql_do -> bindParam(2, $last_id);
@@ -46,8 +46,8 @@
 					$sql_do -> execute();
 					
 					$sql_do = $db -> prepare(
-						'insert into b_data (b_id, id, data_name, data) '.
-						'values (?, ?, "data", ?)'
+						'insert into b_data (b_id, id, to_id, data_name, data) '.
+						'values (?, ?, "1", "data", ?)'
 					);
 					$sql_do -> bindParam(1, $_GET['b_id']);
 					$sql_do -> bindParam(2, $last_id);
@@ -55,8 +55,8 @@
 					$sql_do -> execute();
 					
 					$sql_do = $db -> prepare(
-						'insert into b_data (b_id, id, data_name, data) '.
-						'values (?, ?, "date", ?)'
+						'insert into b_data (b_id, id, to_id, data_name, data) '.
+						'values (?, ?, "1", "date", ?)'
 					);
 					$sql_do -> bindParam(1, $_GET['b_id']);
 					$sql_do -> bindParam(2, $last_id);
