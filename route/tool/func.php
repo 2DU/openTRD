@@ -18,6 +18,22 @@
 	function do_echo_to_js($data) {
 		return '<script>console.log(\''.preg_replace('/\'/', '\\\'', $data).'\');</script>';
 	}
+
+	function do_html_change($data, $reverse = 0) {
+		if($reverse === 0) {
+			return htmlspecialchars($data);
+		} else {
+			return htmlspecialchars_decode($data);
+		}
+	}
+
+	function do_check_xss($data) {
+		if(htmlspecialchars($data) !== $data) {
+			return 1;
+		} else {
+			return 0;
+		}
+	}
     
     function get_lang($name) {
         global $data_lang;

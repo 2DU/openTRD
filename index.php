@@ -5,6 +5,8 @@
 
 	require_once('./view/scarlet/skin.php');
 
+	require_once('./data/easter_egg.php');
+
 	require_once('./route/tool/func.php');
 
 	require_once('./route/main_main.php');
@@ -13,6 +15,7 @@
 	require_once('./route/board_add.php');
 
 	require_once('./route/post_add.php');
+	require_once('./route/post_read.php');
 
 	require_once('./route/user_main.php');
 	require_once('./route/user_login.php');
@@ -20,6 +23,7 @@
 	require_once('./route/user_logout.php');
 
 	session_start();
+	ob_start();
 
     $data_lang = json_decode(
         file_get_contents('./lang/ko-KR.json'), 
@@ -31,7 +35,7 @@
         TRUE
     );
     
-	$db = new SQLite3('data.db');
+	$db = new SQLite3('./data/data.db');
 	do_global_db_1($db);
 
 	function get_render($title, $data, $menu = []) {
@@ -67,7 +71,13 @@
 			);		
 			$db -> exec(
 				'create table if not exists '.
-				'b_data(b_id longtext, id longtext, data_name longtext, data longtext)'
+				'b_data('.
+					'b_id longtext, '.
+					'id longtext, '.
+					'to_id longtext, '.
+					'data_name longtext, '.
+					'data longtext'.
+				')'
 			);
 			$db -> exec(
 				'create table if not exists '.
@@ -85,9 +95,9 @@
         );
     }
 
-    if(file_exists('./ver_now.json')) {
+    if(file_exists('./data/ver_now.json')) {
         $data_ver_now = json_decode(
-            file_get_contents('./ver_now.json'), 
+            file_get_contents('./data/ver_now.json'), 
             TRUE
         )['main'];
     } else {
@@ -128,6 +138,8 @@
 			echo route_board_add($db);
 		} elseif($_GET['v'] === 'p_add') {
 			echo route_post_add($db);
+		} elseif($_GET['v'] === 'p_read') {
+			echo route_post_read($db);
 		} elseif($_GET['v'] === 'u_main') {
 			echo route_user_main();
 		} elseif($_GET['v'] === 'u_login') {
@@ -136,6 +148,8 @@
 			echo route_user_signup($db);
 		} elseif($_GET['v'] === 'u_logout') {
 			echo route_user_logout();
+		} elseif($_GET['v'] === 'easter_egg') {
+			echo route_easter_egg();
 		} else {
 			http_response_code(404);
 			do_redirect('?v=main');

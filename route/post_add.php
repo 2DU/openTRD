@@ -1,8 +1,9 @@
 <?php
 	function route_post_add($db) {
+		$user_id = get_id();
 		if(do_check_b_id_exist() !== 1) {
 			do_redirect('?v=main');
-		} elseif(do_check_acl() !== 1) {
+		} elseif(do_check_acl($user_id) !== 1) {
 			echo get_render(
 				get_lang('error'), 
 				get_lang('acl_error')
@@ -51,7 +52,7 @@
 					);
 					$sql_do -> bindParam(1, $_GET['b_id']);
 					$sql_do -> bindParam(2, $last_id);
-					$sql_do -> bindParam(3, $_POST['data']);
+					$sql_do -> bindParam(3, $_POST['content']);
 					$sql_do -> execute();
 					
 					$sql_do = $db -> prepare(
@@ -63,9 +64,18 @@
 					$sql_do -> bindParam(3, get_date());
 					$sql_do -> execute();
 					
+					$sql_do = $db -> prepare(
+						'insert into b_data (b_id, id, to_id, data_name, data) '.
+						'values (?, ?, "1", "user", ?)'
+					);
+					$sql_do -> bindParam(1, $_GET['b_id']);
+					$sql_do -> bindParam(2, $last_id);
+					$sql_do -> bindParam(3, $user_id);
+					$sql_do -> execute();
+					
 					$db -> exec('commit');
 					
-					do_redirect('?v=p_read&b_id='.$_GET['b_id'].'$p_id='.$last_id);
+					do_redirect('?v=p_read&b_id='.$_GET['b_id'].'&p_id='.$last_id);
 				}
 			} else {
 				$data = "
