@@ -15,7 +15,7 @@
                 <head>    
                     <meta charset=\"utf-8\">
                     <title>".$title."</title>
-					".$other['main_head']."
+                    ".$other['main_head']."
                     <link rel=\"stylesheet\" href=\"".do_file_fix('/view/scarlet/css/main.css?ver=2')."\">
                     <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
                 </head>
@@ -23,7 +23,7 @@
                     <header>
                         <span class=\"give_margin\"></span>
                         <a href=\"?v=main\">".get_lang('main')."</a> | 
-						<a href=\"?v=u_main\">".get_lang('user')."</a>
+                        <a href=\"?v=u_main\">".get_lang('user')."</a>
                     </header>
                     <section>
                         <div id=\"title\"><h1>".$title."</h1></div>

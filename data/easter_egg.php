@@ -1,5 +1,5 @@
 <?php
-	function route_easter_egg() {
-		echo 'openNAMU';
-	}
+    function route_easter_egg() {
+        echo 'openNAMU';
+    }
 ?>
