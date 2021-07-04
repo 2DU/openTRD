@@ -12,6 +12,8 @@
 		"user" : "사용자",
 		"title" : "제목",
 		"content" : "내용",
+        "auth" : "권한",
+        "ip" : "IP",
     "__func__" : "",
         "__title_name__" : "",
             "main_page" : "메인 페이지",

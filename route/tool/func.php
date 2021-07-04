@@ -49,82 +49,7 @@
 		return (string)date("Y-m-d H:i:s");
 	}
 
-	function do_check_admin($id = '') {
-		global $db;
-		
-		if($id === '') {
-			$id = get_id();
-		} 
-		
-		if(!array_key_exists('id', $_SESSION)) {
-			return 0;
-		} else {
-			$sql_do = $db -> prepare(
-				'select set_data from m_user_set '.
-				'where user_name = ? and set_name = "acl"'
-			);
-			$sql_do -> bindParam(1, $id);
-			$sql_do = $sql_do -> execute();
-			$sql_end = $sql_do -> fetchArray();			
-			if(!$sql_end) {
-				return 0;
-			} else {
-				if($sql_end[0] === 'normal') {
-					return 0;
-				} else {
-					return 1;
-				}
-			}
-		}
-	}
-
-	function do_check_acl($id = '') {
-		global $db;
-		
-		if($id === '') {
-			$id = get_id();
-		}
-		
-		$sql_do = $db -> prepare(
-			'select set_data from m_user_set '.
-			'where user_name = ? and set_name = "acl"'
-		);
-		$sql_do -> bindParam(1, $id);
-		$sql_do = $sql_do -> execute();
-		$sql_end = $sql_do -> fetchArray();			
-		if($sql_end && $sql_end[0] === 'ban') {
-			return 0;
-		} else {
-			return 1;
-		}
-	}
-
-	function do_check_b_id_exist($return_title = 0) {
-		global $db;
-		
-		if(!array_key_exists('b_id', $_GET)) {
-			return 0;
-		} else {
-			$sql_do = $db -> prepare(
-				'select set_data from b_set '.
-				'where set_name = "list" and b_id = ?'
-			);
-			$sql_do -> bindParam(1, $_GET['b_id']);
-			$sql_do = $sql_do -> execute();
-			$sql_end = $sql_do -> fetchArray();
-			if(!$sql_end) {
-				return 0;
-			} else {
-				if($return_title === 1) {
-					return $sql_end[0];
-				} else {
-					return 1;
-				}
-			}
-		}
-	}
-
- 	function get_id() {
+    function get_id() {
         if(array_key_exists('id', $_SESSION)) {
             $ip = $_SESSION["id"];
         } else {
@@ -162,4 +87,97 @@
 
         return $ip;
     }
+
+    function get_auth($id = '') {
+        global $db;
+        
+        if($id === '') {
+            $id = get_id();
+        }
+        
+        if(do_check_sub($id) === 1) {
+            $sql_do = $db -> prepare(
+				'select set_data from m_user_set '.
+				'where user_name = ? and set_name = "acl"'
+			);
+			$sql_do -> bindParam(1, $id);
+			$sql_do = $sql_do -> execute();
+			$sql_end = $sql_do -> fetchArray();
+            
+            return $sql_end[0];
+        } else {
+            return 0;
+        }
+    }
+
+    function do_check_sub($id = '') {
+        if($id === '') {
+            $id = get_id();
+        }
+        
+        if(!array_key_exists('id', $_SESSION)) {
+			return 0;
+		} else {
+            return 1;
+        }
+    }
+
+	function do_check_admin($id = '') {		
+		if($id === '') {
+			$id = get_id();
+		}
+		
+		if(!array_key_exists('id', $_SESSION)) {
+			return 0;
+		} else {
+            $u_auth = get_auth($id);
+			if($u_auth === 0) {
+				return 0;
+			} else {
+				if($u_auth === 'normal') {
+					return 0;
+				} else {
+					return 1;
+				}
+			}
+		}
+	}
+
+	function do_check_acl($id = '') {		
+		if($id === '') {
+			$id = get_id();
+		}
+		
+		$u_auth = get_auth($id);		
+		if($u_auth === 'ban') {
+			return 0;
+		} else {
+			return 1;
+		}
+	}
+
+	function do_check_b_id_exist($return_title = 0) {
+		global $db;
+		
+		if(!array_key_exists('b_id', $_GET)) {
+			return 0;
+		} else {
+			$sql_do = $db -> prepare(
+				'select set_data from b_set '.
+				'where set_name = "list" and b_id = ?'
+			);
+			$sql_do -> bindParam(1, $_GET['b_id']);
+			$sql_do = $sql_do -> execute();
+			$sql_end = $sql_do -> fetchArray();
+			if(!$sql_end) {
+				return 0;
+			} else {
+				if($return_title === 1) {
+					return $sql_end[0];
+				} else {
+					return 1;
+				}
+			}
+		}
+	}
 ?>

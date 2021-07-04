@@ -39,17 +39,15 @@
 				$data = "
 					<form method=\"post\">
 						".get_lang('name')."
-						<br>
+						<hr class=\"main_hr\">
 						<input name=\"b_name\">
-						<br>
-						<br>
+						<hr class=\"main_hr\">
 						".get_lang('type')."
-						<br>
+						<hr class=\"main_hr\">
 						<select name=\"b_type\">
 							<option value=\"thread\">".get_lang('thread')."</option>
 						</select>
-						<br>
-						<br>
+						<hr class=\"main_hr\">
 						<button type=\"submit\">".get_lang('add')."</buttom>
 					</form>
 				";
