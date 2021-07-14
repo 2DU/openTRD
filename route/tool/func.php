@@ -44,6 +44,15 @@
             return $name." (M)";
         }
     }
+    
+    function get_render($title, $data, $menu = []) {
+        $main_head_ver = '1';
+        
+        $other = [];
+        $other['main_head'] = '<link rel="stylesheet" href="'.do_file_fix('/view/main_css/css/main.css?ver='.$main_head_ver).'">';
+        
+        return skin_render($title, $data, $menu, $other);
+    }
 
     function get_date() {
         return (string)date("Y-m-d H:i:s");

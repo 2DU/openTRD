@@ -7,13 +7,13 @@
                 $_POST["repeat"] !== ''
             ) {
                 if(preg_match("/[^a-zA-Z0-9ㄱ-힣]/", $_POST["id"])) {
-                    echo do_render(
+                    echo get_render(
                         get_lang('error'), 
                         get_lang('id_check_error')
                     );
                 } else {
                     if($_POST["pw"] !== $_POST["repeat"]) {
-                        echo do_render(
+                        echo get_render(
                             get_lang('error'), 
                             get_lang('pw_check_error')
                         );
@@ -26,7 +26,7 @@
                         $sql_do = $sql_do -> execute();
                         $sql_end = $sql_do -> fetchArray();
                         if($sql_end) {
-                            echo do_render(
+                            echo get_render(
                                 get_lang('error'), 
                                 get_lang('exist_id_error')
                             );
@@ -65,7 +65,7 @@
                     }
                 }
             } else {
-                echo do_render(
+                echo get_render(
                     get_lang('error'), 
                     get_lang('input_all_error')
                 );
